@@ -8,7 +8,7 @@ const config: Config = {
   clearMocks: true,
   collectCoverage: true,
   coverageProvider: 'v8',
-  setupFiles: ['./test/dotenv.ts'],
+  // setupFiles: ['./test/dotenv.ts'],
   coverageReporters: ['text-summary', 'lcov', 'html'],
   coverageDirectory: 'coverage',
   reporters: ['default'],
