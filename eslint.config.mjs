@@ -9,7 +9,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const __dirname = path.dirname(__filename);
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,

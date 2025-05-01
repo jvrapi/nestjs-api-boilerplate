@@ -4,7 +4,7 @@ export const pinoConfig = (configService: ConfigService) => {
   const NODE_ENV = configService.get('NODE_ENV');
   const APP_NAME = configService.get('APP_NAME');
   const LOG_LEVEL = configService.get('LOG_LEVEL');
-  const isProduction = NODE_ENV.includes('prod');
+  const isProduction = NODE_ENV?.includes('prod');
 
   return {
     pinoHttp: {

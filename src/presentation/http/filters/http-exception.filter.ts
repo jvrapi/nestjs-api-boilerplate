@@ -1,3 +1,4 @@
+import { Status } from '@grpc/grpc-js/build/src/constants';
 import {
   ArgumentsHost,
   Catch,
@@ -5,8 +6,8 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
+
 import { BaseException } from '@/core/exceptions/base.exception';
-import { Status } from '@grpc/grpc-js/build/src/constants';
 import {
   ErrorCodes,
   GrpcCodesToHttp,
