@@ -1,4 +1,4 @@
-import { ErrorCodes } from './enums/error-codes';
+import { ErrorCodes } from './enums/error-codes.js';
 
 export abstract class BaseException extends Error {
   constructor(
