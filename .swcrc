@@ -1,12 +1,12 @@
 {
-  "$schema": "https://json.schemastore.org/swcrc",
-  "sourceMaps": "inline",
+  "$schema": "https://swc.rs/schema.json",
+  "sourceMaps": true,
   "module": {
-    "type": "commonjs"
+    "type": "es6",
+    "resolveFully": true
   },
   "jsc": {
-    "externalHelpers": false,
-    "target": "es2021",
+    "target": "es2022",
     "parser": {
       "syntax": "typescript",
       "decorators": true,
@@ -17,8 +17,12 @@
       "decoratorMetadata": true
     },
     "keepClassNames": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
-  "minify": true
+  "minify": false
 }
-

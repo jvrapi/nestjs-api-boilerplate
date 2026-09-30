@@ -1,5 +1,5 @@
-import { BaseException } from './base.exception';
-import { ErrorCodes } from './enums/error-codes';
+import { BaseException } from './base.exception.js';
+import { ErrorCodes } from './enums/error-codes.js';
 
 export class NotFoundException extends BaseException {
   constructor(message?: string) {

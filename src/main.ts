@@ -6,8 +6,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
 
-import { AppModule } from './infrastructure/modules/app.module';
-import { HttpExceptionFilter } from './presentation/http/filters/http-exception.filter';
+import { AppModule } from './infra/modules/app.module.js';
+import { ErrorHandler } from './presentation/http/filters/http-exception.filter.js';
 
 const { PORT = 3000, BIND_ADDRESS = '0.0.0.0' } = process.env;
 
@@ -21,10 +21,10 @@ async function bootstrap() {
   );
 
   app.useLogger(app.get(Logger));
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new ErrorHandler());
 
   await app.listen(PORT, BIND_ADDRESS, (_, address) => {
     new NestLogger('bootstrap').log(`Service is running in ${address} ️‍🔥`);
   });
 }
-bootstrap();
+await bootstrap();

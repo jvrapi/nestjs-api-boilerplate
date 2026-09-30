@@ -4,8 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "builder": "swc",
-    "tsConfigPath": "tsconfig.build.json",
     "deleteOutDir": true,
-    "assets": [{ "include": "**/*.proto", "outDir": "./dist/src" }]
+    "typeCheck": true
   }
 }

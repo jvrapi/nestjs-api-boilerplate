@@ -1,39 +1,47 @@
-import { Status } from '@grpc/grpc-js/build/src/constants';
+import { BaseException } from '@/shared/exceptions/base.exception.js';
+import { ErrorCodes } from '@/shared/exceptions/enums/error-codes.js';
 import {
   ArgumentsHost,
+  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
+  Logger,
 } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
 
-import { BaseException } from '@/core/exceptions/base.exception';
-import {
-  ErrorCodes,
-  GrpcCodesToHttp,
-} from '@/core/exceptions/enums/error-codes';
+const ERROR_CODE_TO_STATUS: Record<ErrorCodes, number> = {
+  [ErrorCodes.INVALID_ARGUMENT]: 400,
+  [ErrorCodes.NOT_FOUND]: 404,
+  [ErrorCodes.DUPLICATE_ENTRY]: 409,
+};
 
-@Catch(Error)
-export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
-    const context = host.switchToHttp();
-    const response = context.getResponse<FastifyReply>();
+@Catch(BaseException, HttpException)
+export class ErrorHandler implements ExceptionFilter {
+  private readonly logger = new Logger(ErrorHandler.name);
 
-    if (exception instanceof BaseException) {
-      response.status(exception.code).send({
-        message: exception.message,
-        className: exception.name,
-      });
+  catch(exception: BaseException | HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+
+    let status: number;
+    let body: { message: string; className: string };
+
+    if (exception instanceof BadRequestException) {
+      const exceptionResponse = exception.getResponse() as any;
+      const messages = Array.isArray(exceptionResponse.message)
+        ? exceptionResponse.message.join(', ')
+        : exceptionResponse.message;
+      status = 400;
+      body = { message: messages, className: 'InvalidArgumentException' };
+    } else if (exception instanceof BaseException) {
+      status = ERROR_CODE_TO_STATUS[exception.code] ?? 500;
+      body = { message: exception.message, className: exception.name };
     } else {
-      response
-        .status(
-          GrpcCodesToHttp[Status[(exception as any).code]] ??
-            ErrorCodes.INTERNAL,
-        )
-        .send({
-          message: exception.message,
-          className: exception.name,
-        });
+      status = exception.getStatus();
+      body = { message: exception.message, className: exception.name };
     }
+
+    this.logger.error(body.message, exception.stack);
+    response.status(status).send(body);
   }
 }
